@@ -61,24 +61,28 @@ function App() {
   ];
   return (
     <>
-      <div className="grid grid-cols-3 grid-rows-3 h-[450px] aspect-square mx-auto my-6">
-        {board.map((value, index) => (
-          <div
-            className={`${borderStyle[index]} border-sky-500 font-mono font-bold text-5xl flex items-center justify-center`}
-            key={index}
-            onClick={() => {
-              handleClick(index);
-            }}
-          >
-            {value}
-          </div>
-        ))}
+      <div className=" absolute top-1/2 left-1/2" style={{transform:"translate(-50%,-50%)"}}>
+        <div className="grid grid-cols-3 grid-rows-3  w-[290px] md:w-[450px] aspect-square mx-auto md:my-6 mb-6">
+          {board.map((value, index) => (
+            <div
+              className={`${borderStyle[index]} border-sky-500 font-mono font-bold text-5xl flex items-center justify-center`}
+              key={index}
+              onClick={() => {
+                handleClick(index);
+              }}
+            >
+              {value}
+            </div>
+          ))}
+        </div>
+        <button
+          className="bg-blue-500 px-6 py-1 rounded mx-auto text-white cursor-pointer block "
+          onClick={resetGame}
+        >
+          reset
+        </button>
+        <span className=" block text-center py-4 ">{status}</span>
       </div>
-      <button className="bg-blue-500 px-6 py-1 rounded mx-auto text-white cursor-pointer block " onClick={resetGame}>
-        reset
-      </button>
-      <span className=" block text-center py-4 ">{status}</span>
-
     </>
   );
 }
