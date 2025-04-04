@@ -1,13 +1,21 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
+import circle from './assets/circle.png';
+import cross from './assets/cross.png';
+import clickAudio from './assets/click.mp3';
+import winAudio from './assets/wins.mp3';
 
 function App() {
+  const clickAudioElement = useRef(0);
+  const winAudioElement = useRef(0);
   const [board, setBoard] = useState(Array(9).fill(null));
-  const [isXNext, setIsXNext] = useState(Math.random > 0.5 ? true : false);
+  const [isXNext, setIsXNext] = useState(Math.random() > 0.5 ? false : true);
+
 
   const handleClick = (index) => {
+    clickAudioElement.current.play();
     if (board[index] || checkWins(board) || isDraw(board)) return;
     const newBoard = board.slice();
-    newBoard[index] = isXNext ? "X" : "O";
+    newBoard[index] = isXNext ? cross : circle;
     setBoard(newBoard);
     setIsXNext(!isXNext);
   };
@@ -25,7 +33,12 @@ function App() {
     ];
     for (let [a, b, c] of lines) {
       if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-        return board[a];
+        winAudioElement.current.play();
+        if(board[a] === circle){
+          return "O";
+        }else{
+          return "X";
+        }
       }
     }
     return null;
@@ -61,22 +74,24 @@ function App() {
   ];
   return (
     <>
+    <audio src={clickAudio} ref={clickAudioElement}></audio>
+    <audio src={winAudio} ref={winAudioElement}></audio>
       <div className=" absolute top-1/2 left-1/2" style={{transform:"translate(-50%,-50%)"}}>
         <div className="grid grid-cols-3 grid-rows-3  w-[290px] md:w-[450px] aspect-square mx-auto md:my-6 mb-6">
           {board.map((value, index) => (
             <div
-              className={`${borderStyle[index]} border-sky-500 font-mono font-bold text-5xl flex items-center justify-center`}
+              className={`${borderStyle[index]} border-black  flex items-center justify-center`}
               key={index}
               onClick={() => {
                 handleClick(index);
               }}
             >
-              {value}
+              <img src={value} className="relative h-20" />
             </div>
           ))}
         </div>
         <button
-          className="bg-blue-500 px-6 py-1 rounded mx-auto text-white cursor-pointer block "
+          className="bg-red-400 px-6 py-1 rounded mx-auto text-white cursor-pointer block "
           onClick={resetGame}
         >
           reset
